@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Posts{% endblock %}
+
+{% block header %}
+    <div style="overflow: auto;">
+        <div class="d-flex">
+            <h1 style="display: inline;">Posts</h1>
+            {% if g.user %}
+                <a class="btn btn-primary ml-auto" href="{{ url_for('blog.create') }}">New</a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% for post in posts %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="card-title">{{ post['title'] }}</h5>
+                <p class="card-subtitle text-muted">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</p>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ post['body'] }}</p>
+            </div>
+            {% if g.user and g.user['id'] == post['author_id'] %}
+                <div class="card-footer">
+                    <a class="btn btn-secondary" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+                </div>
+            {% endif %}
+        </div>
+        {% if not loop.last %}
+            <hr>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
